@@ -1,0 +1,15 @@
+- hosts: VirtualMachines
+  tasks:
+    - name: install plses
+      #apt install redis-server
+      ansible.builtin.apt:
+
+        name: redis-server
+        state: present
+        #apt-get update
+        update_cache: yes
+
+    - name: remove redis server
+      ansible.builtin.apt:
+        name: redis-server
+        state: absent
