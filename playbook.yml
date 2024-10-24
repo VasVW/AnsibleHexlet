@@ -1,15 +1,17 @@
-- hosts: VirtualMachines
+- hosts: VPS
   tasks:
-    - name: install plses
-      #apt install redis-server
-      ansible.builtin.apt:
+    - name: Create Dir
+      file:
+        path: ~/ansibledir
+        state: directory
+        mode: '0755'
+    - name: Create File
+      file:
+        path: ~/ansibledir/ansiblefile
+        state: touch
 
-        name: redis-server
-        state: present
-        #apt-get update
-        update_cache: yes
+- hosts: VMs
+  tasks:
+    - name: pinging
+      ansible.builtin.ping:
 
-    - name: remove redis server
-      ansible.builtin.apt:
-        name: redis-server
-        state: absent
