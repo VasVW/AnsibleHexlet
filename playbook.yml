@@ -9,9 +9,27 @@
       file:
         path: ~/ansibledir/ansiblefile
         state: touch
+      tags: dir
 
 - hosts: VMs
   tasks:
-    - name: pinging
-      ansible.builtin.ping:
+    - name: install nginx
+      apt:
+        name: nginx
+        state: present
+        update_cache: yes
+      become: yes
 
+    - name: install git
+      apt:
+        name: git
+        state: present
+        update_cache: yes
+      become: yes
+    - name: creating user1
+      ansible.builtin.user:
+        name: user1
+        state: present
+        create_home: true
+      tags: createuser1
+      become: yes
