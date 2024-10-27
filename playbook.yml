@@ -12,6 +12,9 @@
       tags: dir
 
 - hosts: VMs
+  vars:
+    root_dir: /root/AnsibleHexlet/files
+    nginx_port: "80"
   tasks:
     - name: install nginx
       apt:
@@ -40,12 +43,12 @@
         mode: '0755'
         owner: gale
     - name: Copying index.html
-      copy:
-        src: files/index.html
+      template:
+        src: "{{root_dir}}/index.html"
         dest: /usr/share/nginx/html/index.html
     - name: Copying nginx.conf
-      ansible.builtin.copy:
-        src: files/nginx.conf
+      ansible.builtin.template:
+        src: "{{root_dir}}/nginx.conf"
         dest: /etc/nginx/nginx.conf
       notify:
         - restart nginx service
