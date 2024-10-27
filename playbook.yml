@@ -33,3 +33,60 @@
         create_home: true
       tags: createuser1
       become: yes
+    - name: seting up nginx directory
+      file:
+        path: /usr/share/nginx/html/
+        state: directory
+        mode: '0755'
+        owner: gale
+    - name: Copying index.html
+      copy:
+        src: files/index.html
+        dest: /usr/share/nginx/html/index.html
+    - name: Copying nginx.conf
+      ansible.builtin.copy:
+        src: files/nginx.conf
+        dest: /etc/nginx/nginx.conf
+      notify:
+        - restart nginx service
+  handlers:
+    - name: restart nginx service
+      ansible.builtin.service:
+        name: nginx
+        state: reloaded
+
+
+#  " - name: setting up html file
+#      ansible.builtin.blockinfile:
+#        path: /usr/share/nginx/html/index.html
+#        create: yes
+#        block: |
+#          <!DOCTYPE html>
+#          <html lang="en">
+#          <head>
+#            <meta charset="UTF-8">
+#              <meta http-equiv="X-UA-Compatible" content="IE=edge">
+#                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+#                  <title>Hello World!</title>
+#                  </head>
+#                  <body>
+#                    <h1>Hello World!</h1>
+#                    </body>
+#                    </html>
+#    - name: Add config file
+#      copy:
+#        dest: /etc/nginx/nginx.conf
+#        content: |
+#          events {
+#
+#          }
+#
+#http {
+# "server {
+# listen 80 default_server;
+#  }
+#}
+# notify:
+#- restart nxinx service
+#
+
