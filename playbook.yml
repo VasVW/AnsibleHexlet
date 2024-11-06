@@ -13,8 +13,10 @@
 
 - hosts: VMs
   vars:
-    root_dir: /root/AnsibleHexlet/files
-    nginx_port: "80"
+    root_dir: /home/gale/projects/AnsibleHexlet/files
+    #nginx_port: "8080"
+    test_var: "server"
+    ansible_python_interpreter: /usr/bin/python3.12
   tasks:
     - name: install nginx
       apt:
