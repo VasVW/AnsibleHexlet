@@ -1,0 +1,8 @@
+- hosts: VMs
+  gather_facts: no
+  tasks:
+    - name: install git
+      apt:
+        name: git
+        state: present
+    
