@@ -1,0 +1,52 @@
+  - hosts: VMs
+    vars: 
+      user_name:
+      - jaime
+      - sansa
+      - robert
+    gather_facts: no
+
+    tasks:
+
+      - name: Install Packages
+        apt:
+          name: "{{ item }}"
+          state: present
+          update_cache: yes
+        loop:
+          - nginx
+          - git
+        tags: install_packages
+        become: yes
+
+      - name: Create Users
+        ansible.builtin.user:
+          name: "{{ item }}"
+          state: present
+          create_home: true
+        loop: "{{ user_name }}"
+        tags: create_users
+        become: yes
+
+      - name: Create git config
+        ansible.builtin.template:
+          src: "/home/gale/projects/AnsibleHexlet/files/.gitconfig"
+          dest: /home/{{ item }}/.gitconfig
+        loop: "{{ user_name }}"
+        tags: git_config
+        become: yes
+
+      - name: Create Dir
+        file:
+          path: /home/{{ item }}/.ssh
+          state: directory
+          mode: '0700'
+        loop: "{{ user_name }}"
+
+      - name: Add public ssh key
+        ansible.builtin.copy:
+          src: "/home/gale/projects/AnsibleHexlet/files/key.pub"
+          dest: /home/{{ item }}/.ssh/authorized_keys
+        loop: "{{ user_name }}"
+        tags: ssh_key
+        become: yes
