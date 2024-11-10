@@ -1,8 +1,28 @@
 - hosts: VMs
   gather_facts: no
+  vars:
+    user_name:
+      - Ubuntu
+      - CentOS
+      - RedHat
   tasks:
-    - name: install git
+    - name: Create Users
+      ansible.builtin.user:
+        name: "{{ item }}"
+        state: present
+        create_home: true
+      loop: "{{ user_name }}"
+      become: yes
+      tags: create_users
+      
+    - name: Install git for Ubuntu user
       apt:
         name: git
         state: present
+      when: item == "Ubuntu"
+      loop: "{{ user_name }}"
+      become: yes
+      tags: install_git
+    
+    
     
