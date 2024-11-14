@@ -1,0 +1,35 @@
+- hosts: CentOS_VMs
+
+  tasks:
+
+    - name: Smartmontools install from source
+      block:
+      - name: Install dependencies
+        ansible.builtin.package:
+          name: gcc-c++
+          state: present
+        become: yes
+
+      - name: Download smartmontools
+        get_url:
+          url: https://github.com/smartmontools/smartmontools/releases/download/RELEASE_7_2/smartmontools-7.2.tar.gz
+          dest: /tmp/smartmontools-7.2.tar.gz
+
+      - name: Extract smartmontools
+        unarchive:
+          src: /tmp/smartmontools-7.2.tar.gz
+          dest: /tmp/
+          remote_src: yes
+
+      - name: Configure and install smartmontools
+        shell: |
+          cd /tmp/smartmontools-7.2
+          ./configure --without-cxx11-option
+          make
+          make install
+
+      - name: Move smartctl to /usr/sbin
+        command: mv /usr/local/sbin/smartctl /usr/sbin/smartctl
+      when: ansible_distribution == "CentOS"
+      become: yes
+      tags: smartctl_CentOS
